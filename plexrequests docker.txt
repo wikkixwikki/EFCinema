@@ -1,0 +1,8 @@
+docker create \
+    --name=plexrequests \
+    --restart=always \
+    -v /etc/localtime:/etc/localtime:ro \
+    -v /docker/plexrequests:/config \
+    -e PGID=1000 -e PUID=1000 \
+    -p 3000:3000 \
+    linuxserver/plexrequests
