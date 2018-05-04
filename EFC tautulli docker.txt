@@ -1,0 +1,8 @@
+docker create \ 
+  --name=tautulli \
+  --restart=always \
+  -v /docker/tautulli:/config \
+  -v "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/":/logs:ro \
+  -e PGID=1000 -e PUID=1000  \
+  -p 8181:8181 \
+  shiggins8/tautulli

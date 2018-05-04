@@ -1,0 +1,18 @@
+docker create \
+    --name=ombiv3 \
+    -e /etc/localtime:/etc/localtime:ro \
+    -v /docker/ombiv3:/config \
+    -e PGID=1000 -e PUID=1000  \
+    -p 3579:3579 \
+    lsiodev/ombi-preview
+
+docker create \
+    --name=ombiv3 \
+    --restart=always \
+    -v /docker/ombiv3:/config \
+    -e PGID=1000 -e PUID=1000  \
+    -e /etc/localtime:/etc/localtime:ro \
+    -p 3579:3579 \
+    lsiodev/ombi-preview
+
+https://hub.docker.com/r/lsiodev/ombi-preview/
