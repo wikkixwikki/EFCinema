@@ -1,0 +1,7 @@
+docker create \
+  --name=organizr \
+  --restart=always \
+  -v /docker/organizr:/config \
+  -e PGID=1000 -e PUID=1000  \
+  -p 8080:80 \
+  lsiocommunity/organizr
