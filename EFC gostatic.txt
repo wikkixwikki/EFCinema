@@ -1,0 +1,5 @@
+docker run -d --name=staticsfs --restart=always -p 5959:8043 -v /plex:/srv/http -default-user-basic-auth=<user> pierrezemb/gostatic -enable-basic-auth -set-basic-auth <user>:<pass>
+
+
+
+
