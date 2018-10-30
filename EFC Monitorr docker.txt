@@ -1,0 +1,10 @@
+sudo docker create \
+    --name=monitorr \
+    --restart=on-failure \
+    -v /docker/monitorr:/app \
+    -e TZ=America/Denver \
+    -v /plex:/plex \
+    -e PGID=1000 \
+    -e PUID=1000 \
+    -p 4078:80 \
+    monitorr/monitorr
