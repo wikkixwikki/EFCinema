@@ -1,0 +1,46 @@
+import platform
+import psutil
+from datetime import datetime, timezone
+from influxdb import InfluxDBClient
+
+import requests
+import os
+import subprocess
+import json
+from lxml.html import fromstring
+from xmljson import badgerfish as bf
+
+
+sp = subprocess.Popen(['nvidia-smi', '-q', '-x'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+xml_data = sp.communicate()[0].decode("utf-8").replace('\n', '').replace('\t', '')
+gpu_json = eval(json.dumps(bf.data(fromstring(xml_data))))
+
+connections = len(requests.get('http://192.168.1.28:32400/connections?X-Plex-Token=WvhsRBwEpAjBN79SUjTK').text.split('\n'))
+
+#try:
+#    processes = gpu_json['nvidia_smi_log']['gpu']['processes']['process_info']#    if isinstance(processes,dict):
+#        transcode_count = 1
+#    else:
+#        transcode_count = len(gpu_json['nvidia_smi_log']['gpu']['processes']['process_info'])
+#except KeyError:
+#    transcode_count = 0
+
+influx_payload = [
+    {
+        "measurement": "Plex OS",
+        "tags": {
+            "server": platform.uname()[1],
+        },
+        "time": datetime.now(timezone.utc).astimezone().isoformat(),
+        "fields": {
+            "CPU Utilization": psutil.cpu_percent(),
+            "HW Transcodes": transcode_count,
+            "RAM Utilization": psutil.virtual_memory().percent,
+            "Load Average": os.getloadavg()[0],
+            "Connections": connections
+        }
+    }
+]
+
+influx = InfluxDBClient('192.168.1.28', 8087, 'plex')
+influx.write_points(influx_payload)
