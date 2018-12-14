@@ -3,7 +3,7 @@ docker create \
   --restart=always \
     -v /docker/radarr4k:/config \
     -v /downloads:/downloads \
-    -v /plex/4k:/movies \
+    -v /plex/4k:/4k \
     -v /etc/localtime:/etc/localtime:ro \
     -e PGID=1000 -e PUID=1000  \
     -p 4000:7878 \
