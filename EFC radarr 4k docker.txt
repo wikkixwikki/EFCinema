@@ -1,0 +1,10 @@
+docker create \
+  --name=radarr4k \
+  --restart=always \
+    -v /docker/radarr4k:/config \
+    -v /downloads:/downloads \
+    -v /plex/4k:/movies \
+    -v /etc/localtime:/etc/localtime:ro \
+    -e PGID=1000 -e PUID=1000  \
+    -p 4000:7878 \
+  linuxserver/radarr
