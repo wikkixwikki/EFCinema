@@ -1,9 +1,0 @@
-docker create \
-  --name deluge \
-  --restart=always \
-  --net=host \
-  -e PUID=1000 -e PGID=1000 \
-  -e UMASK_SET=022 \
-  -v /downloads:/downloads \
-  -v /docker/deluge:/config \
-  linuxserver/deluge

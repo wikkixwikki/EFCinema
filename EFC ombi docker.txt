@@ -1,8 +1,0 @@
-docker create \
-    --name=ombi \
-    --restart=always \
-    -v /etc/localtime:/etc/localtime:ro \
-    -v /docker/ombi:/config \
-    -e PGID=1000 -e PUID=1000  \
-    -p 3579:3579 \
-    linuxserver/ombi

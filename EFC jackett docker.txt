@@ -1,8 +1,0 @@
-docker create \
---name=jackett \
---restart=always \
--v /docker/jackett:/config \
--v /downloads:/downloads \
--e PGID=1000 -e PUID=1000 \
--p 9117:9117 \
-linuxserver/jackett
