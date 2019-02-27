@@ -1,2 +1,0 @@
-https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/
-https://my.bluehost.com/hosting/help/putty

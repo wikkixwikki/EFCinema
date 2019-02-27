@@ -1,1 +1,0 @@
-rclone mount secret: /gdrive/ --allow-other --buffer-size 1G --dir-cache-time 72h --drive-chunk-size 32M --fast-list --vfs-read-chunk-size 128M --vfs-read-chunk-size-limit 2G --umask 002 --stats 1m --log-level INFO --log-file /var/log/rclone/rclone-linux.log &
