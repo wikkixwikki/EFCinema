@@ -1,0 +1,16 @@
+my_drives="/dev/sdc"
+for drive in $my_drives; do
+    sudo smartctl -i "$drive" | grep "SMART support"
+done
+
+
+for drive in $my_drives; do
+    sudo smartctl -t short "$drive"
+done
+
+
+
+
+for drive in $my_drives; do
+    sudo smartctl -l selftest "$drive"
+done

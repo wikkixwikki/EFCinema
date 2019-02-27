@@ -1,4 +1,0 @@
-sudo wget <go to https://www.plex.tv/downloads/ for the deb distro for linux>
-sudo service plexmediaserver stop
-sudo dpkg -i <.deb file here>
-once that is done plex service should have auto started
