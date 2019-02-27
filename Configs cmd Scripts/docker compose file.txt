@@ -1,0 +1,226 @@
+version: '3'
+networks:
+  internal:
+    name: internal
+      name: efcinema_internal
+      driver: bridge
+services:
+  radarr:
+    container_name: radarr
+    hostname: radarr
+    image: linuxserver/radarr:nightly
+    networks:
+      - internal
+    volumes:
+      - /plex/movies:/movies
+      - /opt/dockerconfigs/radarr:/config
+      - /downloads:/downloads
+    environment:
+      - TZ=America/Denver
+      - PGID=1000
+      - PUID=1000
+    restart: unless-stopped
+  sonarr:
+    container_name: sonarr
+    hostname: sonarr
+    image: lsiodev/sonarr-preview
+    networks:
+      - internal
+    volumes:
+      - /plex/tv:/tv
+      - /opt/dockerconfigs/sonarr:/config
+      - /downloads:/downloads
+    environment:
+      - TZ=America/Denver
+      - PGID=1000
+      - PUID=1000
+    restart: unless-stopped
+  deluge:
+    container_name: deluge
+    hostname: deluge
+    image: linuxserver/deluge
+    networks:
+      - internal
+    ports:
+      - 50100:50100
+      - 58846:58846
+    volumes:
+      - /downloads:/downloads
+      - /opt/dockerconfigs/deluge:/config
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK_SET=007
+      - TZ=America/Denver
+    restart: unless-stopped
+  influxdb:
+    container_name: influxdb
+    hostname: influxdb
+    image: influxdb
+    networks:
+      - internal
+    ports:
+      - 8086:8086
+    labels:
+      - "com.ouroboros.enable=false"
+    volumes:
+      - /opt/dockerconfigs/influxdb:/var/lib/influxdb
+      - /opt/dockerconfigs/influxdb/influxdb.conf:/etc/influxdb/influxdb.conf:ro
+    restart: unless-stopped
+    command: -config /etc/influxdb/influxdb.conf
+  varken:
+    container_name: varken
+    hostname: varken
+    image: boerderij/varken
+    networks:
+      - internal
+    labels:
+      - "com.ouroboros.enable=true"
+    volumes:
+      - /opt/dockerconfigs/varken:/config
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - DEBUG=true
+      - TZ=America/Denver
+    restart: unless-stopped
+  grafana:
+    container_name: grafana
+    hostname: grafana
+    image: grafana/grafana
+    networks:
+      - internal
+    labels:
+      - "com.ouroboros.enable=true"
+    volumes:
+      - /opt/dockerconfigs/grafana:/config
+    environment:
+      - GF_PATHS_DATA=/config/data
+      - GF_PATHS_LOGS=/config/logs
+      - GF_PATHS_PLUGINS=/config/plugins
+      - GF_PATHS_CONFIG=/config/grafana.ini
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel,grafana-worldmap-panel,snuids-radar-panel
+    depends_on:
+      - influxdb
+    restart: unless-stopped
+  portainer:
+    container_name: portainer
+    hostname: portainer
+    image: portainer/portainer
+    networks:
+      - internal
+    labels:
+      - "com.ouroboros.enable=true"
+    volumes:
+      - /opt/dockerconfigs/portainer:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+  ombi:
+    container_name: ombi
+    hostname: ombi
+    image: linuxserver/ombi
+    networks:
+      - internal
+    labels:
+      - "com.ouroboros.enable=true"
+    volumes:
+      - /opt/dockerconfigs/ombi:/config
+    environment:
+      - TZ=America/Denver
+    restart: unless-stopped
+  nginx:
+    container_name: nginx
+    hostname: nginx
+    image: linuxserver/nginx
+    networks:
+      - internal
+    labels:
+      - "com.ouroboros.enable=true"
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /opt/dockerconfigs/nginx:/config
+    environment:
+      - TZ=America/Denver
+    restart: unless-stopped
+  tautulli:
+    container_name: tautulli
+    hostname: tautulli
+    image: linuxserver/tautulli
+    networks:
+      - internal
+    labels:
+      - "com.ouroboros.enable=true"
+    volumes:
+      - /opt/dockerconfigs/tautulli:/config
+    environment:
+      - TZ=America/Denver
+    restart: unless-stopped
+  organizr:
+    container_name: organizr
+    hostname: organizr
+    image: organizrtools/organizr-v2
+    networks:
+      - internal
+    labels:
+      - "com.ouroboros.enable=true"
+    volumes:
+      - /opt/dockerconfigs/organizr:/config
+    environment:
+      - /etc/localtime:/etc/localtime:ro
+    restart: unless-stopped
+  ouroboros:
+    container_name: ouroboros
+    hostname: ouroboros
+    image: pyouroboros/ouroboros
+    networks:
+      - internal
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - CLEANUP=true
+      - CRON=* * * * *
+      - LOG_LEVEL=info
+      - LABEL_ENABLE=true
+      - LABELS_ONLY=true
+      - REPO_USER=dirtycajunrice
+      - REPO_PASS=ijL7uBNb2oPCA2
+      - DOCKER_SOCKETS=unix://var/run/docker.sock
+      - DATA_EXPORT=influxdb
+      - INFLUX_URL=influxdb
+      - INFLUX_DATABASE=ouroboros
+      - SELF_UPDATE=true
+      - TZ=America/Denver
+    restart: unless-stopped
+  plex:
+    container_name: plex
+    hostname: plex
+    image: linuxserver/plex
+    networks:
+      - internal
+    labels:
+      - "com.ouroboros.enable=true"
+    ports:
+      - 32400:32400
+    volumes:
+      - /opt/dockerconfigs/plex:/config
+      - /plex/movies:/movies
+      - /plex/tv:/tv
+    environment:
+      - TZ-America/Denver
+      - PUID=1000
+      - PGID=1000
+    restart: unless-stopped
+  nzbget:
+    container_name: nzbget
+    hostname: nzbget
+    image: linuxserver/nzbget
+    networks:
+      - internal
+    labels:
+      - "com.ouroboros.enable=true"
+    volumes:
+      - /opt/dockerconfigs/nzbget:/config
+      - /downloads:/downloads
+      - TZ=America/Denver
