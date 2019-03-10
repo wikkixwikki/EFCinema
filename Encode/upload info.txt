@@ -1,0 +1,6 @@
+title.of.film.year.resolution.source.audio_if_not_AC3.codec-release-group.extension
+e.g. Batman.Forever.2000.1080p.BluRay.AAC.x264-MuDBuG.mkv
+
+gather everything and the last thing i should do is generate the mediainfo
+
+needs to have chapters... if not defined do it at 5 min intervals
