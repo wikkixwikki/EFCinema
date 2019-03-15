@@ -66,6 +66,8 @@ Options = use_ino,hard_remove,auto_cache,sync_read,allow_other,category.action=a
 
 [Install]
 WantedBy=gmedia.service
+
+..............................................................................................................................
 [root@deadpool03 system]# cat gmedia.service
 [Unit]
 Description=gmedia
